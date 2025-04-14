@@ -1,9 +1,10 @@
 import Koa from "koa"
 import axios from "axios"
-import router from "./router.js"
-
-
+import Router from './router.js'; // 导入路由
+// const bodyParser = require('koa-bodyparser');
 const app = new Koa();
+
+// app.use(bodyParser());
 
 app.use(async (ctx, next) => {
   // console.log("ctx:", ctx.path, ctx.method)
@@ -42,7 +43,10 @@ app.use(async (ctx, next) => {
  * 
  * router.routes()是将您的路由集成到 Koa 应用中不可或缺的一部分。
  */
-app.use(router.routes())
+// 使用路由
+// 使用路由
+app.use(Router.routes());
+app.use(Router.allowedMethods()); // 确保未匹配的请求返回适当的状态
 
 
 // 自定义未定义路由处理
@@ -50,6 +54,8 @@ app.use(async (ctx) => {
   ctx.status = 404; // 设置状态为 404 Not Found
   ctx.body = { message: 'Not Found' }; // 返回 Not Found 消息
 });
+
+
 app.listen(3001, () => {
   console.log("server is running on port 3001")
 })
