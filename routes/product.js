@@ -1,5 +1,5 @@
-import Router from 'koa-router';
-
+//import Router from 'koa-router';
+const Router = require('koa-router')
 const productRouter = new Router();
 
 // 产品列表路由
@@ -13,4 +13,5 @@ productRouter.get('/:id', async (ctx) => {
   ctx.body = { productId: id, name: `Product ${id}` };
 });
 
-export default productRouter;
+//export default productRouter;
+module.exports = productRouter;

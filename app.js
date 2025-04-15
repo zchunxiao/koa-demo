@@ -1,9 +1,9 @@
-import Koa from "koa"
-import axios from "axios"
-import Router from './router.js'; // 导入路由
+const Koa = require('koa');
+const axios = require('axios')
+//import Router from './router.js'; // 导入路由
 // const bodyParser = require('koa-bodyparser');
 const app = new Koa();
-
+const Router = require('./router.js'); // 导入路由
 // app.use(bodyParser());
 
 app.use(async (ctx, next) => {

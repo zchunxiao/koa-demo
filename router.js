@@ -1,7 +1,10 @@
-import Router from 'koa-router';
-import { productRoutes, userRoutes, cookiesRoutes } from './routes/index.js'; // 从 index.js 导入路由
 
+//import { productRoutes, userRoutes, cookiesRoutes } from './routes/index.js'; // 从 index.js 导入路由
+
+const Router = require('koa-router')
 const router = new Router();
+const { productRoutes, userRoutes } = require('./routes/index.js');
+
 
 // 根目录路由，重定向到新首页
 router.get('/', async (ctx) => {
@@ -22,5 +25,4 @@ router.get('/classic/latest', async (ctx) => {
 // 注册其他路由
 router.use('/products', productRoutes.routes(), productRoutes.allowedMethods());
 router.use('/users', userRoutes.routes(), userRoutes.allowedMethods());
-router.use('/cookies', cookiesRoutes.routes(), cookiesRoutes.allowedMethods());
-export default router;
+module.exports = router;
