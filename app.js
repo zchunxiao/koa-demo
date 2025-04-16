@@ -1,10 +1,52 @@
 const Koa = require('koa');
 const axios = require('axios')
+const bodyParser = require('koa-bodyparser');
+const session = require('koa-session')
 //import Router from './router.js'; // 导入路由
-// const bodyParser = require('koa-bodyparser');
+
+
 const app = new Koa();
+// const session = require('koa-session')
 const Router = require('./router.js'); // 导入路由
-// app.use(bodyParser());
+
+app.use(bodyParser());
+/**
+ * koa-bodyparser 是一个 Koa 中间件，用于解析请求体中的 JSON 数据。
+ * 当客户端发送一个 POST 请求时，koa-bodyparser 会将请求体中的 JSON 数据解析为 JavaScript 对象，并将其存储在 ctx.request.body 中。
+ * 这样，您就可以在路由处理程序中直接访问请求体中的数据了。
+ * 当什么都没传的时候，ctx.request.body为空对象
+ * 
+ */
+app.keys = ['some secret hurr'];
+
+const CONFIG = {
+  key: 'koa.sess', /** (string) cookie key (default is koa.sess) */
+  /** (number || 'session') maxAge in ms (default is 1 days) */
+  /** 'session' will result in a cookie that expires when session/browser is closed */
+  /** Warning: If a session cookie is stolen, this cookie will never expire */
+  maxAge: 86400000,
+  autoCommit: true, /** (boolean) automatically commit headers (default true) */
+  overwrite: true, /** (boolean) can overwrite or not (default true) */
+  httpOnly: true, /** (boolean) httpOnly or not (default true) */
+  signed: true, /** (boolean) signed or not (default true) */
+  rolling: false, /** (boolean) Force a session identifier cookie to be set on every response. The expiration is reset to the original maxAge, resetting the expiration countdown. (default is false) */
+  renew: false, /** (boolean) renew session when session is nearly expired, so we can always keep user logged in. (default is false)*/
+  secure: false, /** (boolean) secure cookie 允许在hhtp上发送cookie*/
+  sameSite: null, /** (string) session cookie sameSite options (default null, don't set it) */
+};
+
+app.use(session(CONFIG, app));
+/**
+ * koa-session 是一个 Koa 中间件，用于处理会话。
+ * 需要放置在router之前,否则会报错,不然怎么使用ctx.session
+ */
+/**
+ * app.use(session())执行后，ctx.session就是个对象了
+ * session()函数会返回一个中间件函数，该函数会处理会话相关的逻辑，例如读取、设置和删除会话数据。
+ * 当客户端发送一个请求时，koa-session 会自动读取请求中的会话 cookie，并将其解析为会话对象。
+ */
+
+
 
 app.use(async (ctx, next) => {
   // console.log("ctx:", ctx.path, ctx.method)
@@ -19,7 +61,10 @@ app.use(async (ctx, next) => {
   //     }
   //   }
   // }
-  console.log("test1")
+
+  console.log("ctx.session:", ctx.session)
+  console.log("ctx.request.body:", ctx.request.body)
+
   await next()
 
 })
@@ -48,7 +93,16 @@ app.use(async (ctx, next) => {
 app.use(Router.routes());
 app.use(Router.allowedMethods()); // 确保未匹配的请求返回适当的状态
 
+// // 配置 session 中间件
+// app.keys = ['your-session-secret']; // 必须设置一个密钥
 
+// const sessionConfig = {
+//   key: 'koa:sess', // cookie 的名称
+//   maxAge: 86400000, // cookie 的过期时间
+//   httpOnly: true, // 仅在 HTTP 请求中可访问
+//   signed: true, // 签名 cookie
+// };
+// app.use(session(sessionConfig, app));
 // 自定义未定义路由处理
 app.use(async (ctx) => {
   ctx.status = 404; // 设置状态为 404 Not Found

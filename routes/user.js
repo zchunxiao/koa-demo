@@ -7,6 +7,22 @@ userRouter.get('/', async (ctx) => {
   ctx.body = { users: ['User 1', 'User 2'] };
 });
 
+// 用户登录
+userRouter.post('/login', async (ctx) => {
+  const { username, password } = ctx.request.body;
+
+  // 验证用户
+  if (username) {
+    ctx.session.user = { username }; // 存储用户信息
+    ctx.body = { message: 'Login successful' };
+  } else {
+    ctx.status = 401; // 未授权
+    ctx.body = { message: 'Invalid username or password' };
+  }
+});
+
+
+
 // 用户详情路由
 userRouter.get('/:id', async (ctx) => {
   const { id } = ctx.params;
