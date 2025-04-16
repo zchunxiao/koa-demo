@@ -34,3 +34,96 @@ console.log(f1()) // 123
 pnpm install -g nodemon
 nodemon app.js
 ```
+
+# koa
+
+1. koa-logger
+2. koa-router
+3. koa-bodyparser
+4. koa-static
+5. koa-views
+6. koa-session
+7. koa-jwt
+8. koa-multer
+9. koa-redis
+10. koa-socket.io
+11. koa-socket.io-adapter
+12. koa-socket.io-session
+13. koa-mount
+14. koa-compose
+15. koa-convert
+16. koa-compose
+17. koa-connect
+18. koa-compose
+
+# [mysql2](https://sidorares.github.io/node-mysql2/zh-CN/docs)
+
+# rollup 打包
+
+1. 安装依赖
+
+```
+pnpm install --save-dev rollup rollup-plugin-node-resolve rollup-plugin-commonjs rollup-plugin-terser
+```
+
+2. 配置文件
+
+```
+//rollup.config.js
+
+import resolve from 'rollup-plugin-node-resolve';
+import commonjs from 'rollup-plugin-commonjs';
+import { terser } from 'rollup-plugin-terser';
+
+export default {
+  input: 'app.js', // 入口文件
+  output: {
+    file: 'dist/bundle.js', // 输出文件
+    format: 'cjs', // CommonJS 格式
+  },
+  plugins: [
+    resolve(), // 解析 node_modules 中的模块
+    commonjs(), // 转换 CommonJS 模块为 ES6
+    terser(), // 压缩输出文件
+  ],
+};
+
+```
+
+3. 打包命令
+
+```
+{
+  "scripts": {
+    "build": "rollup -c"
+  }
+}
+```
+
+4. 打包命令
+
+```
+pnpm run build
+```
+
+5. 部署服务器
+
+- 选择服务器
+- 上传文件:将 dist/bundle.js 和 package.json 上传到服务器
+- 安装依赖:在服务器上，进入项目目录并运行在服务器上执行`pnpm install`安装依赖
+- 运行应用:使用 node.js 运行打包后的项目 node dist/bundle.js
+
+6. 使用 pm2 管理应用
+
+- 安装 pm2:在服务器上，运行`pnpm install pm2 -g`安装 pm2
+- 启动应用:在服务器上，进入项目目录并运行`pm2 start dist/bundle.js`启动应用
+- 查看应用状态:在服务器上，运行`pm2 status`查看应用状态
+- 停止应用:在服务器上，运行`pm2 stop dist/bundle.js`停止应用
+- 重启应用:在服务器上，运行`pm2 restart dist/bundle.js`重启应用
+- 删除应用:在服务器上，运行`pm2 delete dist/bundle.js`删除应用
+
+```
+pnpm install -g pm2
+pm2 start dist/bundle.js --name my-koa-app
+pm2 save
+```

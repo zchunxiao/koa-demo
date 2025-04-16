@@ -13,7 +13,7 @@ userRouter.post('/login', async (ctx) => {
 
   // 验证用户
   if (username) {
-    ctx.session.user = { username }; // 存储用户信息
+    ctx.session.username = { username }; // 存储用户信息
     ctx.body = { message: 'Login successful' };
   } else {
     ctx.status = 401; // 未授权
@@ -21,6 +21,18 @@ userRouter.post('/login', async (ctx) => {
   }
 });
 
+
+// 获取用户信息
+userRouter.get('/info', async (ctx) => {
+  console.log("fff:", ctx)
+  const username = ctx.session.username;
+  if (username) {
+    ctx.body = { username };
+  } else {
+    ctx.status = 401; // 未授权
+    ctx.body = { message: 'Unauthorized' };
+  }
+})
 
 
 // 用户详情路由

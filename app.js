@@ -2,6 +2,8 @@ const Koa = require('koa');
 const axios = require('axios')
 const bodyParser = require('koa-bodyparser');
 const session = require('koa-session')
+const logger = require('koa-logger')
+const cors = require('koa-cors');
 //import Router from './router.js'; // 导入路由
 
 
@@ -9,6 +11,23 @@ const app = new Koa();
 // const session = require('koa-session')
 const Router = require('./router.js'); // 导入路由
 
+app.use(cors({
+  origin: '*', // 允许的源
+  allowMethods: ['GET', 'POST'], // 允许的请求方法
+  allowHeaders: ['Content-Type', 'Authorization'], // 允许的请求头
+  exposeHeaders: ['Content-Length', 'X-Knowledge'], // 允许暴露的响应头
+  maxAge: 3600, // 预检请求的最大缓存时间
+  credentials: true, // 是否允许携带凭证
+}));
+
+app.use(logger());
+/**
+ * 建议在顶部使用use这个中间件来“包装”所有后续中间件，因为这样能保证在所有路由之前使用
+ * logger 是一个 Koa 中间件，用于记录请求日志。
+ * 当客户端发送一个请求时，logger 会记录请求的 URL、请求方法、响应状态码和响应时间等信息。
+ * 这些日志信息可以帮助您了解应用程序的性能和用户行为，从而进行优化和调试。
+ * 
+ */
 app.use(bodyParser());
 /**
  * koa-bodyparser 是一个 Koa 中间件，用于解析请求体中的 JSON 数据。
